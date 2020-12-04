@@ -6,7 +6,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import FormGroup from '@material-ui/core/FormGroup';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -16,6 +20,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useForm } from 'react-hook-form';
+import { Document, Page, Text, View, StyleSheet,PDFViewer } from '@react-pdf/renderer';
 
 import Map from './map'
 
@@ -32,7 +37,9 @@ const Home = () => {
     supermarket:[]
   });
   const [open, setOpen] = useState(false);
-  const { register } = useForm({
+  const [openPdf, setOpenPdf] = useState(false);
+  const [data, setData] = useState();
+  const { register ,getValues} = useForm({
     mode: 'onBlur',
   });
   
@@ -58,7 +65,7 @@ const Home = () => {
 
     if(data){
       if(data){
-        const result = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=${type}&key=AIzaSyCOEhXSw6tr5bfmCDTVGvOQaFfwkJ4XPWM`)
+        const result = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=${type}&key=AIzaSyAcOnvMwmTrA9bFr7MiMwu9Now2tRUre9U`)
         console.log(data,type);
         console.log(result.data.results);
 
@@ -115,14 +122,53 @@ const Home = () => {
     setOpen(false);
   };
 
+  const handleOpenPdf = () => {
+    setOpenPdf(true);
+    console.log('DATAAAAAAAAAAAAAAAAA',data);
+  };
+
+  const handleClosePdf = (value) => {
+    setOpenPdf(false);
+  };
+
+  const handleGenerate = (value) => {
+    const values = getValues();
+    setData(values);
+    console.log(values);
+    handleOpenPdf();
+  };
+
+  const styles = StyleSheet.create({
+    page: { width:'1000px',height:'1000px' },
+    heading: { backgroundColor:'black',color: 'white', textAlign: 'center',fontWeight:'bold',padding:20,marginBottom:10},
+    text:{fontWeight:'bold'},
+    section: { borderStyle:'solid',borderWidth:3,borderColor:'black' ,textAlign: 'left',fontSize:14,padding:10,fontWeight:'bold',width:170,marginLeft:10},
+    test:{borderStyle:'solid',borderWidth:3,borderColor:'black'}
+  });
+
   return (
 		<Grid container>
+      <Grid item container >
+      
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start"  color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" >
+            BOOMI Value
+          </Typography>
+          
+        </Toolbar>
+      </AppBar>
+    
+      </Grid>
       <Grid item>
-      <Typography variant="subtitle1" gutterBottom style={{padding:"50px 100px 5px 340px"}}>
+      <Typography variant="subtitle1" gutterBottom style={{padding:"50px 100px 5px 100px"}}>
         Enter Cordinates (WGX) :
       </Typography>
       </Grid>
-      <Grid item container style={{padding:"0px 100px 0px 340px"}} spacing={5}>
+      <Grid item container style={{padding:"0px 100px 0px 100px"}} spacing={5}>
             <Grid item>
               <TextField onChange={(e)=>{handleLatitude(e.target.value);}} label="Latitude" variant="outlined" size="small" />
             </Grid>
@@ -142,10 +188,10 @@ const Home = () => {
             </Grid>
             
       </Grid>
-      <Typography variant="subtitle1" gutterBottom style={{padding:"0px 100px 0px 340px"}}>
+      <Typography variant="subtitle1" gutterBottom style={{padding:"0px 100px 0px 100px"}}>
         Select Features :
       </Typography>
-      <Grid item container style={{padding:"0px 100px 50px 340px"}} spacing={5}>
+      <Grid item container style={{padding:"0px 100px 50px 100px"}} spacing={5}>
         <Grid item>
           <FormControlLabel
           control={
@@ -213,7 +259,7 @@ const Home = () => {
         </Grid>
 
         </Grid>
-      <div style={{padding:"0px 340px"}}>
+      <div style={{padding:"0px 100px"}}>
         <Map center={center} features={features}/>
       </div>
       <Dialog
@@ -447,11 +493,49 @@ const Home = () => {
           <Button onClick={handleClose} color="primary">
             cancel
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleGenerate} color="primary" autoFocus>
             Generate
           </Button>
         </DialogActions>
       </Dialog>
+
+
+{data ?      <Dialog
+      fullScreen
+        open={openPdf}
+        onClose={handleClosePdf}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <PDFViewer height='950px'>
+          <Document>
+            <Page size="A4" style={styles.page}>
+              <View style={styles.heading}>
+                <Text style={styles.text}>Final Report</Text>
+              </View>
+              <View style={styles.section}>
+                  <Text>Latitude : {latitude}</Text>
+                  <Text>Longitude: {longitude}</Text>
+              </View>
+              <View>
+                <Text>Village : {data.village}</Text>
+                <Text>GND : {data.gnd}</Text>
+                <Text>DSD : {data.dsd}</Text>
+                <Text>Dstrict : {data.district}</Text>
+                <Text>Province : {data.province}</Text>
+                <Text>Prcel ID : {data.id}</Text>
+                <Text>Lot No : {data.lot}</Text>
+                <Text>Extent : {data.extent}</Text>
+                <Text>Name of the land : {data.name}</Text>
+                <Text>Land use : {data.land}</Text>
+                <Text>Claimant : {data.claimant}</Text>
+                <Text>Area : {data.area}</Text>
+              </View>
+            </Page>
+          </Document>
+        </PDFViewer>
+      </Dialog> : null}
+
         
 		</Grid>
   );

@@ -132,7 +132,7 @@ const Map = ({center,features}) => {
 
   return (
       <LoadScript
-      googleMapsApiKey="AIzaSyCOEhXSw6tr5bfmCDTVGvOQaFfwkJ4XPWM"
+      googleMapsApiKey="AIzaSyAcOnvMwmTrA9bFr7MiMwu9Now2tRUre9U"
     >
       <GoogleMap
         mapContainerStyle={containerStyle}
