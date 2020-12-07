@@ -3,6 +3,7 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { Marker } from '@react-google-maps/api';
 import { Circle } from '@react-google-maps/api';
 import { InfoWindow } from '@react-google-maps/api';
+import { Polyline } from '@react-google-maps/api';
 import { InfoBox } from '@react-google-maps/api';
 import { DistanceMatrixService } from '@react-google-maps/api';
 
@@ -116,6 +117,8 @@ const Map = ({center,features}) => {
 
 
   const testMarker=(feature,type)=>{
+
+    const path=[feature.geometry.location,center]
     // const distance=calculateDist(feature.geometry.location,center)
     //var distance='malith'
       return (
@@ -142,6 +145,10 @@ const Map = ({center,features}) => {
               <h4>{getDistance(feature.geometry.location,center)}KM</h4>
             </div>
           </InfoWindow>
+          <Polyline
+            path={path}
+            options={options}
+          />
           
         </div>
         
