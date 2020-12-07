@@ -26,6 +26,7 @@ import {Table,TableHeader,TableCell,TableBody,DataTableCell} from '@david.kucsai
 
 import Map from './map'
 import Land from './images/land.png'
+import code from './images/qrcode.jpg'
 
 const Home = () => {
 	const [latitude,setLatitude]=useState();
@@ -646,9 +647,15 @@ const Home = () => {
                   <Text style={styles.font}>Proximity Operators :</Text>
                   <Text style={styles.font2}>Schools, Hospitals, Police-stations, Super markets, Banks</Text>
                 </View>
-                <View style={{ textAlign: 'center', margin: 30 }}>
+                <View style={{ textAlign: 'center',}}>
                   <Text>Valuation Price Per Perch (Rs) </Text>
                   <Text style={{fontSize:'16'}}>4,500,000</Text>
+                </View>
+                <View >
+                  <Image
+                      style={{width:'10%',margin:'50 0 0 500'}}
+                      src={code}
+                    />
                 </View>
             </Page>
           </Document>
