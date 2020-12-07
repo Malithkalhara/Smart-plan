@@ -6,6 +6,23 @@ import { InfoWindow } from '@react-google-maps/api';
 import { InfoBox } from '@react-google-maps/api';
 import { DistanceMatrixService } from '@react-google-maps/api';
 
+
+var rad = function(x) {
+  return x * Math.PI / 180;
+};
+
+var getDistance = function(p1, p2) {
+  var R = 6378137; // Earth’s mean radius in meter
+  var dLat = rad(p2.lat - p1.lat);
+  var dLong = rad(p2.lng - p1.lng);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = (R * c)/1000;
+  return d.toFixed(1); // returns the distance in meter
+};
+
 const Map = ({center,features}) => {
 
   const [distance, setDistance] = useState(null);
@@ -96,19 +113,33 @@ const Map = ({center,features}) => {
 
   // }
 
+
+
   const testMarker=(feature,type)=>{
     // const distance=calculateDist(feature.geometry.location,center)
     //var distance='malith'
       return (
         <div>
           <Marker position={feature.geometry.location}/>
+          {/* <DistanceMatrixService
+            options={{
+                      destinations: [feature.geometry.location],
+                      origins: [center],
+                      travelMode: "DRIVING",
+                    }}
+            callback = {(response) => {
+              console.log('Distance',response)
+
+              //setDistance(response.rows[0].elements[0].distance.text) 
+              
+            }}
+            /> */}
           <InfoWindow
-            //onLoad={onLoad}
             position={feature.geometry.location}
           >
             <div >
               <h3>{feature.name}</h3>
-              <h4></h4>
+              <h4>{getDistance(feature.geometry.location,center)}KM</h4>
             </div>
           </InfoWindow>
           
