@@ -20,11 +20,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useForm } from 'react-hook-form';
-import { Document, Page, Text, View, StyleSheet,PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, Text,Image, View, StyleSheet,PDFViewer } from '@react-pdf/renderer';
 import MaterialTable from 'material-table'
 import {Table,TableHeader,TableCell,TableBody,DataTableCell} from '@david.kucsai/react-pdf-table'
 
 import Map from './map'
+import Land from './images/land.png'
 
 const Home = () => {
 	const [latitude,setLatitude]=useState();
@@ -183,25 +184,24 @@ const Home = () => {
         `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
     },
   ];
-  
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+
 
   const styles = StyleSheet.create({
     page: { width:'1000px',height:'1000px' },
     heading: { backgroundColor:'black',color: 'white', textAlign: 'center',fontWeight:'bold',padding:20,marginBottom:10},
     text:{fontWeight:'bold'},
     section: { borderStyle:'solid',borderWidth:3,borderColor:'black' ,textAlign: 'left',fontSize:14,padding:10,fontWeight:'bold',width:170,marginLeft:10},
-    test:{borderStyle:'solid',borderWidth:3,borderColor:'black'}
+    test:{borderStyle:'solid',borderWidth:3,borderColor:'black'},
+    table:{margin:10},
+    image: {
+      width: '30%',
+      padding: 10,
+      textAlign:'right'
+      //backgroundColor: 'grey',
+    },
+    font:{fontSize:14,paddingLeft:10,paddingBottom:10},
+    font1:{fontSize:14,paddingLeft:10,paddingBottom:10},
+    font2:{fontSize:14,paddingLeft:80,paddingBottom:20}
   });
 
   return (
@@ -487,6 +487,20 @@ const Home = () => {
                   </FormControl>
                 </Grid>
               </Grid>
+              <Grid item container spacing={3}>
+                <Grid item style={{flex:1}}>
+                <p style={{color:'black'}}>Approximated Value</p>
+                  <FormControl fullWidth>
+                    <TextField
+                      inputRef={register}
+                      name="value"
+                      placeholder="Approximated Value (Rs)"
+                      variant="outlined"
+                      size='small'
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
               <Grid item container>
               <Grid item container>
               <p style={{color:'black'}}>Facilities</p>
@@ -588,6 +602,11 @@ const Home = () => {
                   <Text>Latitude : {latitude}</Text>
                   <Text>Longitude: {longitude}</Text>
               </View>
+              <Image
+                style={styles.image}
+                src={Land}
+              />
+              <View style={styles.table}>
               <Table
                     data={[
                         {firstName: "Village", lastName: `${data.village}`},
@@ -602,21 +621,35 @@ const Home = () => {
                         {firstName: "Land use", lastName: `${data.land}`},
                         {firstName: "Claimant", lastName: `${data.claimant}`},
                         {firstName: "Area", lastName: `${data.area}`},
+                        {firstName: "Approximated Value (Rs)", lastName: `${data.value}`}
                     ]}
                 >
-                    <TableHeader>
-                        <TableCell>
+                    <TableHeader textAlign={"center"}>
+                        <TableCell weighting={0.8}>
                             Name
                         </TableCell>
-                        <TableCell>
+                        <TableCell weighting={0.8}>
                             Value
                         </TableCell>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody textAlign={"center"}>
                         <DataTableCell getContent={(r) => r.firstName}/>
                         <DataTableCell getContent={(r) => r.lastName}/>
                     </TableBody>
                 </Table>
+                </View>
+                <View >
+                  <Text style={styles.font}>Infastructure :</Text>
+                  <Text style={styles.font2}>Water, Communication Network, Transportation, Sewage, Electricity</Text>
+                </View>
+                <View >
+                  <Text style={styles.font}>Proximity Operators :</Text>
+                  <Text style={styles.font2}>Schools, Hospitals, Police-stations, Super markets, Banks</Text>
+                </View>
+                <View style={{ textAlign: 'center', margin: 30 }}>
+                  <Text>Valuation Price Per Perch (Rs) </Text>
+                  <Text style={{fontSize:'16'}}>4,500,000</Text>
+                </View>
             </Page>
           </Document>
         </PDFViewer>
