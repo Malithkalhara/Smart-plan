@@ -8,32 +8,16 @@ import { InfoBox } from '@react-google-maps/api';
 import { DistanceMatrixService } from '@react-google-maps/api';
 
 
-var rad = function(x) {
-  return x * Math.PI / 180;
-};
+const Map = ({center,features,facilities,testMarker}) => {
 
-var getDistance = function(p1, p2) {
-  var R = 6378137; // Earth’s mean radius in meter
-  var dLat = rad(p2.lat - p1.lat);
-  var dLong = rad(p2.lng - p1.lng);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
-    Math.sin(dLong / 2) * Math.sin(dLong / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = (R * c)/1000;
-  return d.toFixed(1); // returns the distance in meter
-};
-
-const Map = ({center,features}) => {
-
-  const [distance, setDistance] = useState(null);
+  const [distance, setDistance] = useState([]);
   const [count, setCount] = useState('false')
 
   const containerStyle = {
     width: '1200px',
     height: '650px'
   };
-   
+
   // const center = {
   //   lat: 7.488862,
   //   lng: 80.353441
@@ -72,102 +56,6 @@ const Map = ({center,features}) => {
     zIndex: 1
   }
 
-  console.log("Featuesssssss",features.school);
-
-  // const calculateDist=(locTo, locFrom)=> {
-  //   var lat2 = locTo.lat;
-  //   var lon2 = locTo.lng;
-  //   var lat1 = locFrom.lat;
-  //   var lon1 = locFrom.lng;
-  
-  //   var R = 6371; // km 
-  //   //has a problem with the .toRad() method below.
-  //   var x1 = lat2 - lat1;
-  //   var dLat = x1.toRad();
-  //   var x2 = lon2 - lon1;
-  //   var dLon = x2.toRad();
-  //   var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-  //     Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
-  //     Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  //   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  //   var d = R * c;
-  //   return d;
-  // }
-
-  // const getDistance = () =>{
-    
-  //   return(    
-  //     <DistanceMatrixService
-  //       options={{
-  //                 destinations: [feature.geometry.location],
-  //                 origins: [center],
-  //                 travelMode: "DRIVING",
-  //               }}
-  //       callback = {(response) => {
-  //         console.log('Distance',response)
-
-  //         setDistance(response.rows[0].elements[0].distance.text) 
-          
-  //       }}
-  //       />
-  //     )
-
-  // }
-
-
-
-  const testMarker=(feature,type)=>{
-
-    const path=[feature.geometry.location,center]
-    // const distance=calculateDist(feature.geometry.location,center)
-    //var distance='malith'
-      return (
-        <div>
-          <Marker position={feature.geometry.location}/>
-          {/* <DistanceMatrixService
-            options={{
-                      destinations: [feature.geometry.location],
-                      origins: [center],
-                      travelMode: "DRIVING",
-                    }}
-            callback = {(response) => {
-              console.log('Distance',response)
-
-              //setDistance(response.rows[0].elements[0].distance.text) 
-              
-            }}
-            /> */}
-          <InfoWindow
-            position={feature.geometry.location}
-          >
-            <div >
-              <h3>{feature.name}</h3>
-              <h4>{getDistance(feature.geometry.location,center)}KM</h4>
-            </div>
-          </InfoWindow>
-          <Polyline
-            path={path}
-            options={options}
-          />
-          
-        </div>
-        
-      )
-    
-
-  }
-  
- 
-  // const onLoad = useCallback(function callback(map) {
-  //   const bounds = new window.google.maps.LatLngBounds();
-  //   map.fitBounds(bounds);
-  //   setMap(map)
-  // }, [])
- 
-  // const onUnmount = useCallback(function callback(map) {
-  //   setMap(null)
-  // }, [])
-
   return (
       <LoadScript
       googleMapsApiKey="AIzaSyAcOnvMwmTrA9bFr7MiMwu9Now2tRUre9U"
@@ -179,21 +67,21 @@ const Map = ({center,features}) => {
       >
         <Marker position={center}/>
         
-        {features.school.map(school=>(
-          testMarker(school,'school')
+        {features.school.map((school,index)=>(
+          testMarker(school,'school',index)
         ))}
-        {features.hospital.map(hospital=>(
-          testMarker(hospital,'hospital')
+        {features.hospital.map((hospital,index)=>(
+          testMarker(hospital,'hospital',index)
           
         ))}
-        {features.bank.map(bank=>(
-          testMarker(bank,'bank')
+        {features.bank.map((bank,index)=>(
+          testMarker(bank,'bank',index)
         ))}
-        {features.police.map(police=>(
-          testMarker(police,'police')
+        {features.police.map((police,index)=>(
+          testMarker(police,'police',index)
         ))}
-        {features.supermarket.map(supermarket=>(
-          testMarker(supermarket,'supermarket')
+        {features.supermarket.map((supermarket,index)=>(
+          testMarker(supermarket,'supermarket',index)
         ))}
         <Circle
           options={options}
