@@ -249,14 +249,30 @@ const Home = () => {
     }
   }
 
-  const calValue = (distance) =>{
-    const facValue=(facilities.length*20)/100;
+  const getWeightValue=(value)=>{
 
-    const distancePercent=(caldistanceBased(school)+caldistanceBased(hospital)+caldistanceBased(bank)+caldistanceBased(police)+caldistanceBased(supermarket))/100
+    if(80<value && value<100){
+      return 0.5;
+    }else if(60<value && value<80){
+      return 0.4;
+    }else if(40<value && value<60){
+      return 0.3;
+    }else if(20<value && value<40){
+      return 0.2;
+    }else{
+      return 0.1;
+    }
+  }
+
+  const calValue = (distance) =>{
+    const facValue=facilities.length*20
+
+    const distancePercent=caldistanceBased(school)+caldistanceBased(hospital)+caldistanceBased(bank)+caldistanceBased(police)+caldistanceBased(supermarket)
     const averageValue=(facValue+distancePercent)/2
+    const weight=getWeightValue(averageValue);
     const approximateValue=Number(getValues('value'))
-    console.log('value',approximateValue);
-    const finalResult=approximateValue+(approximateValue*averageValue)
+  
+    const finalResult=approximateValue+(approximateValue*weight)
     setFinalValue(finalResult)
   }
    
